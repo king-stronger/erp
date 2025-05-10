@@ -7,10 +7,20 @@ import session from 'express-session';
 
 // Declare the constant variables
 const PORT = process.env.PORT;
+const LocalStrategy = pkg.Strategy;
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Init the express app
 const app = express();
+
+// Set middlewares to handle session and passport session
+app.use(session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Set a middleware to handle static files
 app.use(express.static(path.join(dirname, "public")));
