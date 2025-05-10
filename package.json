@@ -1,0 +1,28 @@
+{
+  "name": "erp",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/king-stronger/erp#readme",
+  "bugs": {
+    "url": "https://github.com/king-stronger/erp/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/king-stronger/erp.git"
+  },
+  "license": "ISC",
+  "author": "Stronger Alaefule",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "node --env-file=.env app.js",
+    "dev": "node --watch --env-file=.env app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "joi": "^17.13.3",
+    "prisma": "^6.8.2"
+  }
+}
