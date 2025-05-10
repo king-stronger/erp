@@ -1,6 +1,9 @@
 import path from 'path';
 import express from 'express';
+import passport from 'passport';
+import pkg from 'passport-local';
 import { fileURLToPath} from 'url';
+import session from 'express-session';
 
 // Declare the constant variables
 const PORT = process.env.PORT;
