@@ -1,12 +1,20 @@
 import { Router } from "express";
-import { login, logout, register } from "../controllers/auth.js";
+import {
+    login,
+    logout,
+    register
+} from "../controllers/auth.js";
+import {
+    isAuthenticated,
+    isNotAuthenticated
+} from "../middlewares/authentication.js";
 
 const authRouter = Router();
 
-authRouter.get("/login", login);
-authRouter.post("/login", login);
-authRouter.post("/logout", logout);
-authRouter.get("/register", register);
-authRouter.post("/register", register);
+authRouter.get("/login", isNotAuthenticated, login);
+authRouter.post("/login", isNotAuthenticated, login);
+authRouter.post("/logout", isAuthenticated, logout);
+authRouter.get("/register", isNotAuthenticated, register);
+authRouter.post("/register", isNotAuthenticated, register);
 
 export default authRouter;
