@@ -29,7 +29,11 @@ async function register(req, res, next){
     if(req.method === "GET"){
         return res.json({ message: "Render register form" });
     }
-
+    
+    if (!req.body || Object.keys(req.body).length === 0) {
+        return res.status(400).json({ message: "No data received" });
+    }
+    
     try {
         const schema = Joi.object({
             name: Joi.string().min(2).required(),
