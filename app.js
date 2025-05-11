@@ -10,6 +10,7 @@ import {
     deserialize
 } from './utils/passport.js';
 import router from './routes/routes.js';
+import errorHandler from './middlewares/errorHandler.js';
 
 // Declare the constant variables
 const PORT = process.env.PORT;
@@ -48,6 +49,16 @@ app.set("views", path.join(dirname, "views"));
 
 // Use the router
 app.use(router);
+
+// Set middleware to handle page not found
+app.use((req, res, next) => {
+    const error = new Error("Page not found");
+    error.status = 404;
+    return next(error);
+});
+
+// Handle global errors
+app.use(errorHandler);
 
 // Make the app listen on a specified port
 app.listen(PORT, () => {
