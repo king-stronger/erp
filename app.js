@@ -4,6 +4,12 @@ import passport from 'passport';
 import pkg from 'passport-local';
 import { fileURLToPath} from 'url';
 import session from 'express-session';
+import { 
+    strategy,
+    serialize,
+    deserialize
+} from './utils/passport.js';
+import router from './routes/routes.js';
 
 // Declare the constant variables
 const PORT = process.env.PORT;
@@ -22,6 +28,14 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Set middlewares to handle passport authentication
+passport.use(new LocalStrategy({
+    usernameField: "email",
+    passwordField: "password"
+}, strategy));
+passport.serializeUser(serialize)
+passport.deserializeUser(deserialize);
+
 // Set a middleware to handle static files
 app.use(express.static(path.join(dirname, "public")));
 
@@ -31,6 +45,9 @@ app.use(express.urlencoded({ extended: true }));
 // Set the view engine to ejs
 app.set("view engine", "ejs");
 app.set("views", path.join(dirname, "views"));
+
+// Use the router
+app.use(router);
 
 // Make the app listen on a specified port
 app.listen(PORT, () => {
