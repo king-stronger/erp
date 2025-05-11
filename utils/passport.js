@@ -13,7 +13,7 @@ async function strategy(email, password, done){
 
         return done(null, user);
     } catch (error){
-        return next(error);
+        return done(error);
     }
 }
 
@@ -25,11 +25,11 @@ async function deserialize(id, done){
     try {
         const user = await prisma.user.findUnique({ where: { id }});
 
-        if(!user) done();
+        if(!user) return done(null, false, { message: "User not found"});
 
         done(null, user);
     } catch (error){
-        return next(error);
+        return done(error);
     }
 }
 
