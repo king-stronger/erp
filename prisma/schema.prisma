@@ -57,7 +57,7 @@ model PaymentMethod {
 
 model Revenue {
   id              Int           @id @default(autoincrement())
-  amount          Float // Montant de la recette
+  amount          Int // Montant de la recette
   date            DateTime // Date à laquelle la recette a été réalisée
   description     String?
   categoryId      Int
@@ -72,7 +72,7 @@ model Revenue {
 
 model Expense {
   id              Int           @id @default(autoincrement())
-  amount          Float // Montant de la dépense
+  amount          Int // Montant de la dépense
   date            DateTime // Date de la dépense
   description     String?
   categoryId      Int
@@ -90,7 +90,7 @@ model Product {
   name          String // Nom du produit
   description   String?
   unit          String // Unité de mesure (ex: kg, litre...)
-  priceUnit     Float? // Prix de vente unitaire conseillé
+  priceUnit     Int? // Prix de vente unitaire conseillé
   initialStock  Float    @default(0) // Stock de départ lors de la création
   alertTreshold Float    @default(0) // Seuil d'alerte pour les stocks faibles
   createdAt     DateTime @default(now())
