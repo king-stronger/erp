@@ -9,7 +9,7 @@ import {
     serialize,
     deserialize
 } from './utils/passport.js';
-import router from './routes/routes.js';
+import router from './routes/router.js';
 import errorHandler from './middlewares/errorHandler.js';
 
 // Declare the constant variables
