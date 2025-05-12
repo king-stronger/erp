@@ -32,7 +32,7 @@ async function getAllRevenues(req, res, next){
 async function createRevenue(req, res, next){
     try {
         const categories = await prisma.category.findMany({
-            include: {
+            select: {
                 id: true,
                 name: true
             }
