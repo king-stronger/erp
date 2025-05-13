@@ -5,7 +5,7 @@ async function getAllPayments(req, res, next){
     try {
         const payments = await prisma.paymentMethod.findMany();
 
-        if(payments.length <= 0) return res.json({ message: "No payment methods found"});
+        if(payments.length === 0) return res.json({ message: "No payment methods found"});
 
         return res.json({ payments });
     } catch (error){
