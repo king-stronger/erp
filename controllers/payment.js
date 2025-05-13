@@ -25,7 +25,7 @@ async function editPayment(req, res, next){
 
         const payment = await prisma.paymentMethod.findUnique({ where: { id }});
 
-        if(!payment) return res.json({ message: "payment not found" });
+        if(!payment) return res.json({ message: "Payment not found" });
 
         return res.json({ message: "Render payment method edition form", payment});
     } catch (error){
@@ -46,6 +46,14 @@ async function storePayment(req, res, next){
         const { error, value } = schema.validate(req.body, { abortEarly: false });
     
         if(error) return res.json({ error });
+
+        const existingPaymentMethod = await prisma.paymentMethod.findFirst({
+            where: {
+                name: value.name
+            }
+        });
+
+        if(existingPaymentMethod) return res.json({ message: "Payment method already exists" });
 
         const newPayment = await prisma.paymentMethod.create({ data: value });
 
@@ -73,9 +81,13 @@ async function updatePayment(req, res, next){
     
         if(error) return res.json({ error });
 
-        const payment = await prisma.paymentMethod.findUnique({ where: { id }});
+        const [ foundPayment, existingPayment ] = await Promise.all([
+            prisma.paymentMethod.findUnique({ where: { id } }),
+            prisma.paymentMethod.findFirst({ where: { name: value.name } }),
+        ])
 
-        if(!payment) return res.json({ message: "payment not found" });
+        if(!foundPayment) return res.json({ message: "Payment not found" });
+        if(existingPayment) return res.json({ message: "Payment already exists" });
 
         const updatedPayment = await prisma.paymentMethod.update({
             where: { id },
