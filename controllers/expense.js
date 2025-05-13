@@ -178,14 +178,14 @@ async function deleteExpense(req, res, next){
         
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
 
-        const existingExpense = await prisma.expense.findUnique({ where: { id } });
-
-        if(!existingExpense) return res.json({ message: "Expense not found" });
-
-        await prisma.expense.delete({
+        const existingExpense = await prisma.expense.findUnique({
             where: { id },
             select: { id: true }
         });
+
+        if(!existingExpense) return res.json({ message: "Expense not found" });
+
+        await prisma.expense.delete({ where: { id } });
 
         return res.json({ message: "Expense successfully deleted" });
     } catch (error){
