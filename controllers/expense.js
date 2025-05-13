@@ -94,7 +94,7 @@ async function storeExpense(req, res, next){
 
         if(error) return res.json({ error });
 
-        const { amount, description, categoryId, date, paymentMethodId } = value;
+        const { categoryId, paymentMethodId } = value;
 
         const [ existingCategory, existingPaymentMethod ] = await Promise.all([
             prisma.category.findUnique({
@@ -111,11 +111,7 @@ async function storeExpense(req, res, next){
 
         const newExpense = await prisma.expense.create({
             data: {
-                date,
-                amount,
-                categoryId,
-                description,
-                paymentMethodId,
+                ...value,
                 createdById: req.user.id
             }
         });
@@ -144,7 +140,7 @@ async function updateExpense(req, res, next){
 
         if(error) return res.json({ error });
 
-        const { amount, description, categoryId, date, paymentMethodId } = value;
+        const { categoryId, paymentMethodId } = value;
 
         const [ existingCategory, existingPaymentMethod, existingExpense ] = await Promise.all([
             prisma.category.findUnique({
