@@ -106,7 +106,8 @@ async function storeRevenue(req, res, next){
             }),
         ]);
 
-        if(!existingCategory || !existingPaymentMethod) return res.json({ message: "Invalid category or payment method"});
+        if(!existingCategory) return res.json({ message: "Category doesn't exist"});
+        if(!existingPaymentMethod) return res.json({ message: "Payment method doesn't exist"});
 
         const newRevenue = await prisma.revenue.create({
             data: {
@@ -155,11 +156,9 @@ async function updateRevenue(req, res, next){
             })
         ]);
 
-        if(
-            !existingRevenue ||
-            !existingCategory ||
-            !existingPaymentMethod
-        ) return res.json({ message: "Category or payment method or revenue doesn't exist"});
+        if(!existingRevenue) return res.json({ message: "Revenue doesn't exist"});
+        if(!existingCategory) return res.json({ message: "Category doesn't exist"});
+        if(!existingPaymentMethod) return res.json({ message: "Payment method doesn't exist"});
         
         const updatedRevenue = await prisma.revenue.update({
             where: { id },
