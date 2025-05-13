@@ -4,7 +4,13 @@ import { Categories } from "@prisma/client";
 
 async function getAllCategories(req, res, next){
     try {
-        const categories = await prisma.category.findMany();
+        const categories = await prisma.category.findMany({
+            select: {
+                id: true,
+                name: true,
+                type: true
+            }
+        });
 
         if(categories.length === 0) return res.json({ message: "Categories not found" });
 
@@ -24,7 +30,14 @@ async function editCategory(req, res, next){
     
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
     
-        const category = await prisma.category.findUnique({ where: { id }});
+        const category = await prisma.category.findUnique({
+            where: { id },
+            select: {
+                id: true,
+                name: true,
+                type: true
+            }
+        });
     
         if(!category) return res.json({ message: "Category doesn't exist" });
         
@@ -49,7 +62,10 @@ async function storeCategory(req, res, next){
     
         if(error) return res.json({ error });
     
-        const existingCategory = await prisma.category.findFirst({ where: value });
+        const existingCategory = await prisma.category.findFirst({
+            where: value,
+            select: { id: true } 
+        });
     
         if(existingCategory) return res.json({ message: "Category already exists" });
     
@@ -81,8 +97,14 @@ async function updateCategory(req, res, next){
         if(error) return res.json({ error });
     
         const [ foundCategory, existingCategory ] = await Promise.all([
-            prisma.category.findUnique({ where: { id }}),
-            prisma.category.findFirst({ where: value })
+            prisma.category.findUnique({
+                where: { id },
+                select: { id: true }
+            }),
+            prisma.category.findFirst({
+                where: value,
+                select: { id: true }
+            })
         ]);
     
         if(!foundCategory) return res.json({ message: "Category doesn't exist" });
@@ -105,7 +127,10 @@ async function deleteCategory(req, res, next){
     
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
     
-        const foundCategory = await prisma.category.findUnique({ where: { id }});
+        const foundCategory = await prisma.category.findUnique({
+            where: { id },
+            select: { id: true }
+        });
     
         if(!foundCategory) return res.json({ message: "Category doesn't exist" });
     
