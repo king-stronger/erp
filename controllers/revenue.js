@@ -7,6 +7,12 @@ async function getAllRevenues(req, res, next){
             orderBy: {
                 date: "desc"
             },
+            select: {
+                id: true,
+                date: true,
+                amount: true,
+                description: true
+            },
             include: {
                 category: {
                     select: {
@@ -50,7 +56,10 @@ async function editRevenue(req, res, next){
         
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
 
-        const revenue = await prisma.revenue.findUnique({ where: { id } });
+        const revenue = await prisma.revenue.findUnique({
+            where: { id },
+            select: { id: true }
+        });
 
         if(!revenue) return res.json({ message: "Revenue not found" });
 
@@ -88,8 +97,13 @@ async function storeRevenue(req, res, next){
         const { amount, description, categoryId, date, paymentMethodId } = value;
 
         const [ existingCategory, existingPaymentMethod ] = await Promise.all([
-            prisma.category.findUnique({ where: { id: categoryId }}),
-            prisma.paymentMethod.findUnique({ where: { id: paymentMethodId }}),
+            prisma.category.findUnique({
+                where: { id: categoryId },
+                select: { id: true } }),
+            prisma.paymentMethod.findUnique({
+                where: { id: paymentMethodId },
+                select: { id: true }
+            }),
         ]);
 
         if(!existingCategory || !existingPaymentMethod) return res.json({ message: "Invalid category or payment method"});
@@ -132,9 +146,17 @@ async function updateRevenue(req, res, next){
         const { amount, description, categoryId, date, paymentMethodId } = value;
 
         const [ existingCategory, existingPaymentMethod, existingRevenue ] = await Promise.all([
-            prisma.category.findUnique({ where: { id: categoryId }}),
-            prisma.paymentMethod.findUnique({ where: { id: paymentMethodId }}),
-            prisma.revenue.findUnique({ where: { id } })
+            prisma.category.findUnique({
+                where: { id: categoryId },
+                select: { id: true }}),
+            prisma.paymentMethod.findUnique({
+                where: { id: paymentMethodId },
+                select: { id: true }
+            }),
+            prisma.revenue.findUnique({
+                where: { id },
+                select: { id: true }
+            })
         ]);
 
         if(
@@ -160,7 +182,10 @@ async function deleteRevenue(req, res, next){
         
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
 
-        const existingRevenue = await prisma.revenue.findUnique({ where: { id } });
+        const existingRevenue = await prisma.revenue.findUnique({
+            where: { id },
+            select: { id: true }
+        });
 
         if(!existingRevenue) return res.json({ message: "Revenue not found" });
 
