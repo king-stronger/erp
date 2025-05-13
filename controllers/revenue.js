@@ -94,7 +94,7 @@ async function storeRevenue(req, res, next){
 
         if(error) return res.json({ error });
 
-        const { amount, description, categoryId, date, paymentMethodId } = value;
+        const { categoryId, paymentMethodId } = value;
 
         const [ existingCategory, existingPaymentMethod ] = await Promise.all([
             prisma.category.findUnique({
@@ -110,11 +110,7 @@ async function storeRevenue(req, res, next){
 
         const newRevenue = await prisma.revenue.create({
             data: {
-                amount,
-                description,
-                date,
-                categoryId,
-                paymentMethodId,
+                ...value,
                 createdById: req.user.id
             }
         });
@@ -143,7 +139,7 @@ async function updateRevenue(req, res, next){
 
         if(error) return res.json({ error });
 
-        const { amount, description, categoryId, date, paymentMethodId } = value;
+        const { categoryId, paymentMethodId } = value;
 
         const [ existingCategory, existingPaymentMethod, existingRevenue ] = await Promise.all([
             prisma.category.findUnique({
