@@ -70,19 +70,23 @@ async function updateCategory(req, res, next){
         const id = parseInt(req.params.id);
     
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
-    
-        const existingCategory = await prisma.category.findUnique({ where: { id }});
-    
-        if(!existingCategory) return res.json({ message: "Category doesn't exist" });
-    
+
         const schema = Joi.object({
             name: Joi.string(),
             type: Joi.string().valid("EXPENSE", "REVENUE", "PRODUCT")
         });
-    
+        
         const { error, value } = schema.validate(req.body, { abortEarly: false });
     
         if(error) return res.json({ error });
+    
+        const [ foundCategory, existingCategory ] = await Promise.all([
+            prisma.category.findUnique({ where: { id }}),
+            prisma.category.findFirst({ where: value })
+        ]);
+    
+        if(!foundCategory) return res.json({ message: "Category doesn't exist" });
+        if(existingCategory) return res.json({ message: "Category already exists" });
 
         const newCategory = await prisma.category.update({
             where: { id },
@@ -101,9 +105,9 @@ async function deleteCategory(req, res, next){
     
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
     
-        const existingCategory = await prisma.category.findUnique({ where: { id }});
+        const foundCategory = await prisma.category.findUnique({ where: { id }});
     
-        if(!existingCategory) return res.json({ message: "Category doesn't exist" });
+        if(!foundCategory) return res.json({ message: "Category doesn't exist" });
     
         await prisma.category.delete({ where: { id } });
 
