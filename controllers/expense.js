@@ -7,6 +7,12 @@ async function getAllExpenses(req, res, next){
             orderBy: {
                 date: "desc"
             },
+            select: {
+                id: true,
+                date: true,
+                amount: true,
+                description: true,
+            },
             include: {
                 category: {
                     select: {
@@ -50,7 +56,10 @@ async function editExpense(req, res, next){
         
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
 
-        const expense = await prisma.expense.findUnique({ where: { id } });
+        const expense = await prisma.expense.findUnique({
+            where: { id },
+            select: { id: true }
+        });
 
         if(!expense) return res.json({ message: "Expense not found" });
 
@@ -88,18 +97,24 @@ async function storeExpense(req, res, next){
         const { amount, description, categoryId, date, paymentMethodId } = value;
 
         const [ existingCategory, existingPaymentMethod ] = await Promise.all([
-            prisma.category.findUnique({ where: { id: categoryId }}),
-            prisma.paymentMethod.findUnique({ where: { id: paymentMethodId }}),
+            prisma.category.findUnique({
+                where: { id: categoryId },
+                select: { id: true }}
+            ),
+            prisma.paymentMethod.findUnique({
+                where: { id: paymentMethodId },
+                select: { id: true }
+            }),
         ]);
 
         if(!existingCategory || !existingPaymentMethod) return res.json({ message: "Invalid category or payment method"});
 
         const newExpense = await prisma.expense.create({
             data: {
-                amount,
-                description,
                 date,
+                amount,
                 categoryId,
+                description,
                 paymentMethodId,
                 createdById: req.user.id
             }
@@ -132,9 +147,17 @@ async function updateExpense(req, res, next){
         const { amount, description, categoryId, date, paymentMethodId } = value;
 
         const [ existingCategory, existingPaymentMethod, existingExpense ] = await Promise.all([
-            prisma.category.findUnique({ where: { id: categoryId }}),
-            prisma.paymentMethod.findUnique({ where: { id: paymentMethodId }}),
-            prisma.expense.findUnique({ where: { id } })
+            prisma.category.findUnique({
+                where: { id: categoryId },
+                select: { id: true } }),
+            prisma.paymentMethod.findUnique({
+                where: { id: paymentMethodId },
+                select: { id: true }
+            }),
+            prisma.expense.findUnique({
+                where: { id },
+                select: { id: true }
+            })
         ]);
 
         if(
@@ -164,7 +187,10 @@ async function deleteExpense(req, res, next){
 
         if(!existingExpense) return res.json({ message: "Expense not found" });
 
-        await prisma.expense.delete({ where: { id }});
+        await prisma.expense.delete({
+            where: { id },
+            select: { id: true }
+        });
 
         return res.json({ message: "Expense successfully deleted" });
     } catch (error){
