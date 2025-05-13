@@ -42,40 +42,18 @@ async function storeCategory(req, res, next){
     
         const schema = Joi.object({
             name: Joi.string().required(),
-            type: Joi.string().valid("expense", "revenue", "product").required()
+            type: Joi.string().valid("EXPENSE", "REVENUE", "PRODUCT").required()
         });
     
         const { error, value } = schema.validate(req.body, { abortEarly: false });
     
         if(error) return res.json({ error });
     
-        const { name, type } = value;
-
-        const prismaType = {
-            expense: Categories.EXPENSE,
-            revenue: Categories.REVENUE,
-            product: Categories.PRODUCT
-        }[type];
-
-        if (!prismaType) {
-            return res.status(400).json({ message: "Invalid category type" });
-        }
-    
-        const existingCategory = await prisma.category.findFirst({
-            where: {
-                name,
-                type: prismaType
-            }
-        });
+        const existingCategory = await prisma.category.findFirst({ where: value });
     
         if(existingCategory) return res.json({ message: "Category already exists" });
     
-        const category = await prisma.category.create({
-            data: {
-                name,
-                type: prismaType
-            }
-        });
+        const category = await prisma.category.create({ data: value });
     
         return res.json({ category });
     } catch (error){
@@ -99,31 +77,16 @@ async function updateCategory(req, res, next){
     
         const schema = Joi.object({
             name: Joi.string(),
-            type: Joi.string()
+            type: Joi.string().valid("EXPENSE", "REVENUE", "PRODUCT")
         });
     
         const { error, value } = schema.validate(req.body, { abortEarly: false });
     
         if(error) return res.json({ error });
 
-        const { name, type } = value;
-
-        const prismaType = {
-            expense: Categories.EXPENSE,
-            revenue: Categories.REVENUE,
-            product: Categories.PRODUCT
-        }[type];
-
-        if (!prismaType) {
-            return res.status(400).json({ message: "Invalid category type" });
-        }
-    
         const newCategory = await prisma.category.update({
             where: { id },
-            data: {
-                name,
-                type: prismaType
-            }
+            data: value
         });
     
         return res.json({ newCategory });
