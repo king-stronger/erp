@@ -46,7 +46,10 @@ async function editProduct(req, res, next){
         if(isNaN(id)) return res.json({ message: "invalid Id" });
 
         const [ product, categories ] = await Promise.all([
-            prisma.product.findUnique({ where: { id }}),
+            prisma.product.findUnique({
+                where: { id },
+                select: { id: true }
+            }),
             prisma.category.findMany({
                 select: {
                     id: true,
@@ -86,7 +89,10 @@ async function storeProduct(req, res, next){
 
         const { categoryId } = value;
 
-        const existingCategory = await prisma.category.findUnique({ where: { id: categoryId }});
+        const existingCategory = await prisma.category.findUnique({
+            where: { id: categoryId },
+            select: { id: true }
+        });
         if(!existingCategory) return res.json({ message: "Invalid category"});
 
         const newProduct = await prisma.product.create({ data: value });
@@ -124,8 +130,14 @@ async function updateProduct(req, res, next){
         const { categoryId } = value;
 
         const [ existingCategory, existingProduct ] = await Promise.all([
-            prisma.category.findUnique({ where: { id: categoryId }}),
-            prisma.product.findUnique({ where: { id } })
+            prisma.category.findUnique({
+                where: { id: categoryId },
+                select: { id: true }
+            }),
+            prisma.product.findUnique({
+                where: { id },
+                select: { id: true }
+            })
         ]);
 
         if(!existingCategory) return res.json({ message: "Invalid category"});
@@ -148,7 +160,10 @@ async function deleteProduct(req, res, next){
 
         if(isNaN(id)) return res.json({ message: "invalid Id" });
 
-        const product = await prisma.product.findUnique({ where: { id }});
+        const product = await prisma.product.findUnique({
+            where: { id },
+            select: { id: true }
+        });
 
         if(!product) return res.json({ message: "Product not found" });
 
