@@ -6,7 +6,7 @@ async function getAllCategories(req, res, next){
     try {
         const categories = await prisma.category.findMany();
 
-        if(categories.length <= 0) return res.json({ message: "Categories not found" });
+        if(categories.length === 0) return res.json({ message: "Categories not found" });
 
         return res.json({ categories });
     } catch(error){
