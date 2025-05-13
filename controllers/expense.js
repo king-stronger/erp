@@ -107,7 +107,8 @@ async function storeExpense(req, res, next){
             }),
         ]);
 
-        if(!existingCategory || !existingPaymentMethod) return res.json({ message: "Invalid category or payment method"});
+        if(!existingCategory) return res.json({ message: "Invalid category method"});
+        if(!existingPaymentMethod) return res.json({ message: "Invalid payment method"});
 
         const newExpense = await prisma.expense.create({
             data: {
@@ -156,11 +157,9 @@ async function updateExpense(req, res, next){
             })
         ]);
 
-        if(
-            !existingExpense ||
-            !existingCategory ||
-            !existingPaymentMethod
-        ) return res.json({ message: "Category or payment method or expense doesn't exist"});
+        if(!existingExpense) return res.json({ message: "expense doesn't exist"});
+        if(!existingCategory) return res.json({ message: "Category doesn't exist"});
+        if(!existingPaymentMethod) return res.json({ message: "Payment method doesn't exist"});
         
         const updatedExpense = await prisma.expense.update({
             where: { id },
