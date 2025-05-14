@@ -1,4 +1,3 @@
-import Joi from "joi";
 import prisma from "../utils/prisma.js";
 
 async function getAllExpenses(req, res, next){
@@ -82,20 +81,6 @@ async function storeExpense(req, res, next){
             return res.json({ message: "No data received" });
         }
 
-        const schema = Joi.object({
-            amount: Joi.number().required(),
-            description: Joi.string().trim().required(),
-            categoryId: Joi.number().required(),
-            paymentMethodId: Joi.number().required(),
-            date: Joi.date().required()
-        });
-
-        const { error, value } = schema.validate(req.body, { abortEarly: false });
-
-        if(error) return res.json({ error });
-
-        const { categoryId, paymentMethodId } = value;
-
         const [ existingCategory, existingPaymentMethod ] = await Promise.all([
             prisma.category.findUnique({
                 where: { id: categoryId },
@@ -112,7 +97,7 @@ async function storeExpense(req, res, next){
 
         const newExpense = await prisma.expense.create({
             data: {
-                ...value,
+                ...req.validatedBody,
                 createdById: req.user.id
             }
         });
@@ -133,19 +118,7 @@ async function updateExpense(req, res, next){
         
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
 
-        const schema = Joi.object({
-            amount: Joi.number().positive(),
-            date: Joi.date(),
-            description: Joi.string().allow(null, '').trim(),
-            categoryId: Joi.number().integer(),
-            paymentMethodId: Joi.number().integer(),
-        });
-
-        const { error, value } = schema.validate(req.body, { abortEarly: false });
-
-        if(error) return res.json({ error });
-
-        const { categoryId, paymentMethodId } = value;
+        const { categoryId, paymentMethodId } = req.validatedBody;
 
         const [ existingCategory, existingPaymentMethod, existingExpense ] = await Promise.all([
             prisma.category.findUnique({
@@ -167,7 +140,7 @@ async function updateExpense(req, res, next){
         
         const updatedExpense = await prisma.expense.update({
             where: { id },
-            data: value 
+            data: req.validatedBody 
         });
 
         return res.json({ message: "Expense successfully updated", updatedExpense });

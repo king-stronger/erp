@@ -17,9 +17,9 @@ const paymentRouter = Router();
 
 paymentRouter.get("/", getAllPayments);
 paymentRouter.get("/new", createPayment);
+paymentRouter.put("/:id", updatePayment);
 paymentRouter.get("/:id/edit", editPayment);
 paymentRouter.post("/", validate(createPaymentSchema), storePayment);
-paymentRouter.put("/:id", updatePayment);
 paymentRouter.delete("/", validate(updatePaymentSchema), deletePayment);
 
 export default paymentRouter;

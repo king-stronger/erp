@@ -7,14 +7,19 @@ import {
     storeExpense,
     updateExpense
 } from "../controllers/expense.js";
+import {
+    createExpenseSchema,
+    updateExpenseSchema
+} from "../validations/expense.js";
+import { validate } from "../utils/validation.js";
 
 const expenseRouter = Router();
 
 expenseRouter.get("/", getAllExpenses);
 expenseRouter.get("/new", createExpense);
 expenseRouter.get("/:id/edit", editExpense);
-expenseRouter.post("/", storeExpense);
-expenseRouter.put("/:id", updateExpense);
-expenseRouter.delete("/:id", deleteExpense);
+expenseRouter.delete("/:id", updateExpense);
+expenseRouter.post("/", validate(createExpenseSchema), storeExpense);
+expenseRouter.put("/:id", validate(updateExpenseSchema), deleteExpense);
 
 export default expenseRouter;
