@@ -78,13 +78,13 @@ async function editRevenue(req, res, next){
 
 async function storeRevenue(req, res, next){
     try {
-        if(!req.body && Object.keys(req.body).length === 0){
+        if(Object.keys(req.body).length === 0){
             return res.json({ message: "No data received" });
         }
 
         const schema = Joi.object({
             amount: Joi.number().required(),
-            description: Joi.string().required(),
+            description: Joi.string().trim().required(),
             categoryId: Joi.number().required(),
             paymentMethodId: Joi.number().required(),
             date: Joi.date().required()
@@ -124,6 +124,10 @@ async function storeRevenue(req, res, next){
 
 async function updateRevenue(req, res, next){
     try {
+        if(Object.keys(req.body).length === 0){
+            return res.json({ message: "No data received" });
+        }
+
         const id = parseInt(req.params.id);
         
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
@@ -131,7 +135,7 @@ async function updateRevenue(req, res, next){
         const schema = Joi.object({
             amount: Joi.number().positive(),
             date: Joi.date(),
-            description: Joi.string().allow(null, ''),
+            description: Joi.string().trim().allow(null, ''),
             categoryId: Joi.number().integer(),
             paymentMethodId: Joi.number().integer(),
         });
