@@ -51,7 +51,7 @@ async function storePayment(req, res, next){
         }
 
         const existingPaymentMethod = await prisma.paymentMethod.findFirst({
-            where: { name: req.validatedBody },
+            where: { name: req.validatedBody.name },
             select: { id: true }
         });
 
@@ -81,7 +81,7 @@ async function updatePayment(req, res, next){
                 select: { id: true }
             }),
             prisma.paymentMethod.findFirst({
-                where: { name: req.validatedBody },
+                where: { name: req.validatedBody.name },
                 select: { id: true }
             }),
         ])
