@@ -82,21 +82,7 @@ async function storeProduct(req, res, next){
             return res.json({ message: "No data was received" });
         }
 
-        const schema = Joi.object({
-            name: Joi.string().trim().required(),
-            description: Joi.string().allow(null, '').trim(),
-            unit: Joi.string().trim().required(),
-            priceUnit: Joi.number().positive().allow(null),
-            initialStock: Joi.number().min(0).default(0),
-            alertTreshold: Joi.number().min(0).default(0),
-            categoryId: Joi.number().integer().required()
-        });
-
-        const { error, value } = schema.validate(req.body, { abortEarly: false });
-
-        if(error) return res.json({ error });
-
-        const { categoryId } = value;
+        const { categoryId } = req.validatedBody;
 
         const existingCategory = await prisma.category.findUnique({
             where: { id: categoryId },
@@ -104,7 +90,7 @@ async function storeProduct(req, res, next){
         });
         if(!existingCategory) return res.json({ message: "Invalid category"});
 
-        const newProduct = await prisma.product.create({ data: value });
+        const newProduct = await prisma.product.create({ data: req.validatedBody });
 
         return res.json({ message: "Product successfully created", newProduct });
     } catch (error){
@@ -122,21 +108,7 @@ async function updateProduct(req, res, next){
 
         if(isNaN(id)) return res.json({ message: "invalid Id" });
 
-        const schema = Joi.object({
-            name: Joi.string().trim(),
-            description: Joi.string().allow(null, '').trim(),
-            unit: Joi.string().trim(),
-            priceUnit: Joi.number().positive().allow(null).trim(),
-            initialStock: Joi.number().min(0),
-            alertTreshold: Joi.number().min(0),
-            categoryId: Joi.number().integer()
-        })
-
-        const { error, value } = schema.validate(req.body, { abortEarly: false });
-
-        if(error) return res.json({ error });
-
-        const { categoryId } = value;
+        const { categoryId } = req.validatedBody;
 
         const [ existingCategory, existingProduct ] = await Promise.all([
             prisma.category.findUnique({
@@ -154,7 +126,7 @@ async function updateProduct(req, res, next){
         
         const updatedProduct = await prisma.product.update({
             where: { id },
-            data: value
+            data: req.validatedBody
         });
 
         return res.json({ message: "Product successfully updated", updatedProduct });
