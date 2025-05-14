@@ -6,12 +6,6 @@ async function getAllExpenses(req, res, next){
             orderBy: {
                 date: "desc"
             },
-            select: {
-                id: true,
-                date: true,
-                amount: true,
-                description: true,
-            },
             include: {
                 category: {
                     select: {
@@ -57,7 +51,14 @@ async function editExpense(req, res, next){
 
         const expense = await prisma.expense.findUnique({
             where: { id },
-            select: { id: true }
+            select: {
+                id: true,
+                date: true,
+                amount: true,
+                description: true,
+                categoryId: true,
+                paymentMethodId: true
+            }
         });
 
         if(!expense) return res.json({ message: "Expense not found" });
@@ -80,6 +81,8 @@ async function storeExpense(req, res, next){
         if(!req.body || Object.keys(req.body).length === 0){
             return res.json({ message: "No data received" });
         }
+
+        const { categoryId, paymentMethodId } = req.validatedBody;
 
         const [ existingCategory, existingPaymentMethod ] = await Promise.all([
             prisma.category.findUnique({
