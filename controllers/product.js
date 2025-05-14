@@ -48,7 +48,16 @@ async function editProduct(req, res, next){
         const [ product, categories ] = await Promise.all([
             prisma.product.findUnique({
                 where: { id },
-                select: { id: true }
+                select: {
+                    id: true,
+                    name: true,
+                    description: true,
+                    unit: true,
+                    priceUnit: true,
+                    initialStock: true,
+                    alertTreshold: true,
+                    categoryId: true
+                }
             }),
             prisma.category.findMany({
                 select: {
