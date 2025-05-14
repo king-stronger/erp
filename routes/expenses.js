@@ -18,8 +18,8 @@ const expenseRouter = Router();
 expenseRouter.get("/", getAllExpenses);
 expenseRouter.get("/new", createExpense);
 expenseRouter.get("/:id/edit", editExpense);
-expenseRouter.delete("/:id", updateExpense);
+expenseRouter.delete("/:id", deleteExpense);
 expenseRouter.post("/", validate(createExpenseSchema), storeExpense);
-expenseRouter.put("/:id", validate(updateExpenseSchema), deleteExpense);
+expenseRouter.put("/:id", validate(updateExpenseSchema), updateExpense);
 
 export default expenseRouter;
