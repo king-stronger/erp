@@ -6,12 +6,6 @@ async function getAllRevenues(req, res, next){
             orderBy: {
                 date: "desc"
             },
-            select: {
-                id: true,
-                date: true,
-                amount: true,
-                description: true
-            },
             include: {
                 category: {
                     select: {
@@ -57,7 +51,14 @@ async function editRevenue(req, res, next){
 
         const revenue = await prisma.revenue.findUnique({
             where: { id },
-            select: { id: true }
+            select: {
+                id: true,
+                date: true,
+                amount: true,
+                description: true,
+                categoryId: true,
+                paymentMethodId: true
+            }
         });
 
         if(!revenue) return res.json({ message: "Revenue not found" });
