@@ -46,12 +46,12 @@ async function editPayment(req, res, next){
 
 async function storePayment(req, res, next){
     try {
-        if (!req.body || Object.keys(req.body).length === 0) {
+        if (Object.keys(req.body).length === 0) {
             return res.json({ message: "No data received" });
         }
 
         const schema = Joi.object({
-            name: Joi.string().required()
+            name: Joi.string().trim().required()
         });
     
         const { error, value } = schema.validate(req.body, { abortEarly: false });
@@ -75,7 +75,7 @@ async function storePayment(req, res, next){
 
 async function updatePayment(req, res, next){
     try {
-        if (!req.body || Object.keys(req.body).length === 0) {
+        if (Object.keys(req.body).length === 0) {
             return res.json({ message: "No data received" });
         }
 
@@ -84,7 +84,7 @@ async function updatePayment(req, res, next){
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
 
         const schema = Joi.object({
-            name: Joi.string().required()
+            name: Joi.string().trim().required()
         });
     
         const { error, value } = schema.validate(req.body, { abortEarly: false });
