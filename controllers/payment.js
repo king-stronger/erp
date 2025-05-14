@@ -50,22 +50,14 @@ async function storePayment(req, res, next){
             return res.json({ message: "No data received" });
         }
 
-        const schema = Joi.object({
-            name: Joi.string().trim().required()
-        });
-    
-        const { error, value } = schema.validate(req.body, { abortEarly: false });
-    
-        if(error) return res.json({ error });
-
         const existingPaymentMethod = await prisma.paymentMethod.findFirst({
-            where: { name: value.name },
+            where: { name: req.validatedBody },
             select: { id: true }
         });
 
         if(existingPaymentMethod) return res.json({ message: "Payment method already exists" });
 
-        const newPayment = await prisma.paymentMethod.create({ data: value });
+        const newPayment = await prisma.paymentMethod.create({ data: req.validatedBody });
 
         return res.json({ newPayment });
     } catch (error){
@@ -83,21 +75,13 @@ async function updatePayment(req, res, next){
         
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
 
-        const schema = Joi.object({
-            name: Joi.string().trim().required()
-        });
-    
-        const { error, value } = schema.validate(req.body, { abortEarly: false });
-    
-        if(error) return res.json({ error });
-
         const [ foundPayment, existingPayment ] = await Promise.all([
             prisma.paymentMethod.findUnique({
                 where: { id },
                 select: { id: true }
             }),
             prisma.paymentMethod.findFirst({
-                where: { name: value.name },
+                where: { name: req.validatedBody },
                 select: { id: true }
             }),
         ])
@@ -107,7 +91,7 @@ async function updatePayment(req, res, next){
 
         const updatedPayment = await prisma.paymentMethod.update({
             where: { id },
-            data: value
+            data: req.validatedBody
         });
         
         return res.json({ message: "Payment method successfully updated", updatedPayment });
