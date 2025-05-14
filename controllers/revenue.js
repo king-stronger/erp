@@ -1,4 +1,3 @@
-import Joi from "joi";
 import prisma from "../utils/prisma.js";
 
 async function getAllRevenues(req, res, next){
@@ -82,19 +81,7 @@ async function storeRevenue(req, res, next){
             return res.json({ message: "No data received" });
         }
 
-        const schema = Joi.object({
-            amount: Joi.number().required(),
-            description: Joi.string().trim().required(),
-            categoryId: Joi.number().required(),
-            paymentMethodId: Joi.number().required(),
-            date: Joi.date().required()
-        });
-
-        const { error, value } = schema.validate(req.body, { abortEarly: false });
-
-        if(error) return res.json({ error });
-
-        const { categoryId, paymentMethodId } = value;
+        const { categoryId, paymentMethodId } = req.validatedBody;
 
         const [ existingCategory, existingPaymentMethod ] = await Promise.all([
             prisma.category.findUnique({
@@ -111,7 +98,7 @@ async function storeRevenue(req, res, next){
 
         const newRevenue = await prisma.revenue.create({
             data: {
-                ...value,
+                ...req.validatedBody,
                 createdById: req.user.id
             }
         });
@@ -132,19 +119,7 @@ async function updateRevenue(req, res, next){
         
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
 
-        const schema = Joi.object({
-            amount: Joi.number().positive(),
-            date: Joi.date(),
-            description: Joi.string().trim().allow(null, ''),
-            categoryId: Joi.number().integer(),
-            paymentMethodId: Joi.number().integer(),
-        });
-
-        const { error, value } = schema.validate(req.body, { abortEarly: false });
-
-        if(error) return res.json({ error });
-
-        const { categoryId, paymentMethodId } = value;
+        const { categoryId, paymentMethodId } = req.validatedBody;
 
         const [ existingCategory, existingPaymentMethod, existingRevenue ] = await Promise.all([
             prisma.category.findUnique({
@@ -166,7 +141,7 @@ async function updateRevenue(req, res, next){
         
         const updatedRevenue = await prisma.revenue.update({
             where: { id },
-            data: value 
+            data: req.validatedBody 
         });
 
         return res.json({ message: "Revenue successfully updated", updatedRevenue });
