@@ -1,6 +1,4 @@
-import Joi from "joi";
 import prisma from "../utils/prisma.js";
-import { Categories } from "@prisma/client";
 
 async function getAllCategories(req, res, next){
     try {
@@ -53,23 +51,14 @@ async function storeCategory(req, res, next){
             return res.status(400).json({ message: "No data received" });
         }
     
-        const schema = Joi.object({
-            name: Joi.string().trim().required(),
-            type: Joi.string().trim().alid("EXPENSE", "REVENUE", "PRODUCT").required()
-        });
-    
-        const { error, value } = schema.validate(req.body, { abortEarly: false });
-    
-        if(error) return res.json({ error });
-    
         const existingCategory = await prisma.category.findFirst({
-            where: value,
+            where: req.validatedBody,
             select: { id: true } 
         });
     
         if(existingCategory) return res.json({ message: "Category already exists" });
     
-        const category = await prisma.category.create({ data: value });
+        const category = await prisma.category.create({ data: req.validatedBody });
     
         return res.json({ category });
     } catch (error){
@@ -86,15 +75,6 @@ async function updateCategory(req, res, next){
         const id = parseInt(req.params.id);
     
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
-
-        const schema = Joi.object({
-            name: Joi.string().trim(),
-            type: Joi.string().trim().valid("EXPENSE", "REVENUE", "PRODUCT")
-        });
-        
-        const { error, value } = schema.validate(req.body, { abortEarly: false });
-    
-        if(error) return res.json({ error });
     
         const [ foundCategory, existingCategory ] = await Promise.all([
             prisma.category.findUnique({
@@ -102,7 +82,7 @@ async function updateCategory(req, res, next){
                 select: { id: true }
             }),
             prisma.category.findFirst({
-                where: value,
+                where: req.validatedBody,
                 select: { id: true }
             })
         ]);
@@ -112,7 +92,7 @@ async function updateCategory(req, res, next){
 
         const newCategory = await prisma.category.update({
             where: { id },
-            data: value
+            data: req.validatedBody
         });
     
         return res.json({ newCategory });
