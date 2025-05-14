@@ -83,9 +83,9 @@ async function storeProduct(req, res, next){
         }
 
         const schema = Joi.object({
-            name: Joi.string().required(),
-            description: Joi.string().allow(null, ''),
-            unit: Joi.string().required(),
+            name: Joi.string().trim().required(),
+            description: Joi.string().allow(null, '').trim(),
+            unit: Joi.string().trim().required(),
             priceUnit: Joi.number().positive().allow(null),
             initialStock: Joi.number().min(0).default(0),
             alertTreshold: Joi.number().min(0).default(0),
@@ -123,10 +123,10 @@ async function updateProduct(req, res, next){
         if(isNaN(id)) return res.json({ message: "invalid Id" });
 
         const schema = Joi.object({
-            name: Joi.string(),
-            description: Joi.string().allow(null, ''),
-            unit: Joi.string(),
-            priceUnit: Joi.number().positive().allow(null),
+            name: Joi.string().trim(),
+            description: Joi.string().allow(null, '').trim(),
+            unit: Joi.string().trim(),
+            priceUnit: Joi.number().positive().allow(null).trim(),
             initialStock: Joi.number().min(0),
             alertTreshold: Joi.number().min(0),
             categoryId: Joi.number().integer()
