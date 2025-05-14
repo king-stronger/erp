@@ -49,13 +49,13 @@ async function editCategory(req, res, next){
 
 async function storeCategory(req, res, next){
     try {
-        if (!req.body || Object.keys(req.body).length === 0) {
+        if (Object.keys(req.body).length === 0) {
             return res.status(400).json({ message: "No data received" });
         }
     
         const schema = Joi.object({
-            name: Joi.string().required(),
-            type: Joi.string().valid("EXPENSE", "REVENUE", "PRODUCT").required()
+            name: Joi.string().trim().required(),
+            type: Joi.string().trim().alid("EXPENSE", "REVENUE", "PRODUCT").required()
         });
     
         const { error, value } = schema.validate(req.body, { abortEarly: false });
@@ -79,7 +79,7 @@ async function storeCategory(req, res, next){
 
 async function updateCategory(req, res, next){
     try {
-        if (!req.body || Object.keys(req.body).length === 0) {
+        if (Object.keys(req.body).length === 0) {
             return res.status(400).json({ message: "No data received" });
         }
     
@@ -88,8 +88,8 @@ async function updateCategory(req, res, next){
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
 
         const schema = Joi.object({
-            name: Joi.string(),
-            type: Joi.string().valid("EXPENSE", "REVENUE", "PRODUCT")
+            name: Joi.string().trim(),
+            type: Joi.string().trim().valid("EXPENSE", "REVENUE", "PRODUCT")
         });
         
         const { error, value } = schema.validate(req.body, { abortEarly: false });
