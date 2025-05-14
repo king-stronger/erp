@@ -78,7 +78,7 @@ async function editProduct(req, res, next){
 
 async function storeProduct(req, res, next){
     try {
-        if(!req.body && Object.keys(req.body).length === 0){
+        if(Object.keys(req.body).length === 0){
             return res.json({ message: "No data was received" });
         }
 
@@ -114,7 +114,7 @@ async function storeProduct(req, res, next){
 
 async function updateProduct(req, res, next){
     try {
-        if(!req.body && Object.keys(req.body).length === 0){
+        if(Object.keys(req.body).length === 0){
             return res.json({ message: "No data was received" });
         }
 
