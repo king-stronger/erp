@@ -58,7 +58,7 @@ async function storePayment(req, res, next){
     
         if(error) return res.json({ error });
 
-        const existingPaymentMethod = await prisma.existingPaymentMethod.findFirst({
+        const existingPaymentMethod = await prisma.paymentMethod.findFirst({
             where: { name: value.name },
             select: { id: true }
         });
