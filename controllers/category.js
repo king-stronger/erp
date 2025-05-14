@@ -47,7 +47,7 @@ async function editCategory(req, res, next){
 
 async function storeCategory(req, res, next){
     try {
-        if (Object.keys(req.body).length === 0) {
+        if (!req.body || Object.keys(req.body).length === 0) {
             return res.status(400).json({ message: "No data received" });
         }
     
@@ -68,7 +68,7 @@ async function storeCategory(req, res, next){
 
 async function updateCategory(req, res, next){
     try {
-        if (Object.keys(req.body).length === 0) {
+        if (!req.body || Object.keys(req.body).length === 0) {
             return res.status(400).json({ message: "No data received" });
         }
     

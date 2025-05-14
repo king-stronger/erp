@@ -78,7 +78,7 @@ async function editExpense(req, res, next){
 
 async function storeExpense(req, res, next){
     try {
-        if(Object.keys(req.body).length === 0){
+        if(!req.body || Object.keys(req.body).length === 0){
             return res.json({ message: "No data received" });
         }
 
@@ -125,7 +125,7 @@ async function storeExpense(req, res, next){
 
 async function updateExpense(req, res, next){
     try {
-        if(Object.keys(req.body).length === 0){
+        if(!req.body || Object.keys(req.body).length === 0){
             return res.json({ message: "No data received" });
         }
 

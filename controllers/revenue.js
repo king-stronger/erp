@@ -78,7 +78,7 @@ async function editRevenue(req, res, next){
 
 async function storeRevenue(req, res, next){
     try {
-        if(Object.keys(req.body).length === 0){
+        if(!req.body || Object.keys(req.body).length === 0){
             return res.json({ message: "No data received" });
         }
 
@@ -124,7 +124,7 @@ async function storeRevenue(req, res, next){
 
 async function updateRevenue(req, res, next){
     try {
-        if(Object.keys(req.body).length === 0){
+        if(!req.body || Object.keys(req.body).length === 0){
             return res.json({ message: "No data received" });
         }
 

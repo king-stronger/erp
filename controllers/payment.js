@@ -46,7 +46,7 @@ async function editPayment(req, res, next){
 
 async function storePayment(req, res, next){
     try {
-        if (Object.keys(req.body).length === 0) {
+        if (!req.body || Object.keys(req.body).length === 0) {
             return res.json({ message: "No data received" });
         }
 
@@ -75,7 +75,7 @@ async function storePayment(req, res, next){
 
 async function updatePayment(req, res, next){
     try {
-        if (Object.keys(req.body).length === 0) {
+        if (!req.body || Object.keys(req.body).length === 0) {
             return res.json({ message: "No data received" });
         }
 
