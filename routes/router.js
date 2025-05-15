@@ -5,6 +5,7 @@ import revenueRouter from "./revenues.js";
 import expenseRouter from "./expenses.js";
 import productRouter from "./products.js";
 import categoryRouter from "./categories.js";
+import stockmovementRouter from "./stockmovement.js";
 import { isAuthenticated } from "../middlewares/authentication.js";
 
 const router = Router();
@@ -15,5 +16,6 @@ router.use("/revenues", isAuthenticated, revenueRouter);
 router.use("/expenses", isAuthenticated, expenseRouter);
 router.use("/products", isAuthenticated, productRouter);
 router.use("/categories", isAuthenticated, categoryRouter);
+router.use("/stockmovements", isAuthenticated, stockmovementRouter);
 
 export default router;
