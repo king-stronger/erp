@@ -11,7 +11,7 @@ import {
     createCategorySchema,
     updateCategorySchema
 } from "../validations/category.js";
-import { validate } from "../utils/validation.js";
+import { validate } from "../middlewares/validation.js";
 
 const categoryRouter = Router();
 

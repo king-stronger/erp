@@ -47,10 +47,6 @@ async function editCategory(req, res, next){
 
 async function storeCategory(req, res, next){
     try {
-        if (!req.body || Object.keys(req.body).length === 0) {
-            return res.status(400).json({ message: "No data received" });
-        }
-    
         const existingCategory = await prisma.category.findFirst({
             where: req.validatedBody,
             select: { id: true } 
@@ -68,10 +64,6 @@ async function storeCategory(req, res, next){
 
 async function updateCategory(req, res, next){
     try {
-        if (!req.body || Object.keys(req.body).length === 0) {
-            return res.status(400).json({ message: "No data received" });
-        }
-    
         const id = parseInt(req.params.id);
     
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
