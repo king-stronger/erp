@@ -30,25 +30,8 @@ async function register(req, res, next){
         return res.json({ message: "Render register form" });
     }
     
-    if (!req.body || Object.keys(req.body).length === 0) {
-        return res.status(400).json({ message: "No data received" });
-    }
-    
     try {
-        const schema = Joi.object({
-            name: Joi.string().min(2).required(),
-            email: Joi.string().email().required(),
-            password: Joi.string().min(8).max(60).required(),
-            repeat_password: Joi.ref("password")
-        });
-
-        const { error, value } = schema.validate(req.body, { abortEarly: false });
-
-        if(error){
-            return res.json({ error });
-        }
-
-        const { name, email, password } = value;
+        const { name, email, password } = req.validatedBody;
 
         const existingUser = await prisma.user.findUnique({ where: { email }});
         if(existingUser) return res.json({ message: "Email already in use "});
