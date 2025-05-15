@@ -7,11 +7,11 @@ import {
     storePayment,
     updatePayment
 } from "../controllers/payment.js";
-import { validate } from "../utils/validation.js";
 import {
     createPaymentSchema,
     updatePaymentSchema
 } from "../validations/payment.js";
+import { validate } from "../middlewares/validation.js";
 
 const paymentRouter = Router();
 

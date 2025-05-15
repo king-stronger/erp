@@ -46,10 +46,6 @@ async function editPayment(req, res, next){
 
 async function storePayment(req, res, next){
     try {
-        if (!req.body || Object.keys(req.body).length === 0) {
-            return res.json({ message: "No data received" });
-        }
-
         const existingPaymentMethod = await prisma.paymentMethod.findFirst({
             where: { name: req.validatedBody.name },
             select: { id: true }
@@ -67,10 +63,6 @@ async function storePayment(req, res, next){
 
 async function updatePayment(req, res, next){
     try {
-        if (!req.body || Object.keys(req.body).length === 0) {
-            return res.json({ message: "No data received" });
-        }
-
         const id = parseInt(req.params.id);
         
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
