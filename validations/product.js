@@ -6,6 +6,7 @@ const createProductschema = Joi.object({
     unit: Joi.string().trim().required(),
     priceUnit: Joi.number().positive().allow(null),
     initialStock: Joi.number().min(0).default(0),
+    currentStock: Joi.number().min(0).default(0),
     alertTreshold: Joi.number().min(0).default(0),
     categoryId: Joi.number().integer().required()
 });
@@ -16,6 +17,7 @@ const updateProductschema = Joi.object({
     unit: Joi.string().trim(),
     priceUnit: Joi.number().positive().allow(null),
     initialStock: Joi.number().min(0),
+    currentStock: Joi.number().min(0),
     alertTreshold: Joi.number().min(0),
     categoryId: Joi.number().integer()
 });
