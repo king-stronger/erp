@@ -11,7 +11,7 @@ import {
     createExpenseSchema,
     updateExpenseSchema
 } from "../validations/expense.js";
-import { validate } from "../utils/validation.js";
+import { validate } from "../middlewares/validation.js";
 
 const expenseRouter = Router();
 

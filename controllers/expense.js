@@ -78,10 +78,6 @@ async function editExpense(req, res, next){
 
 async function storeExpense(req, res, next){
     try {
-        if(!req.body || Object.keys(req.body).length === 0){
-            return res.json({ message: "No data received" });
-        }
-
         const { categoryId, paymentMethodId } = req.validatedBody;
 
         const [ existingCategory, existingPaymentMethod ] = await Promise.all([
@@ -113,10 +109,6 @@ async function storeExpense(req, res, next){
 
 async function updateExpense(req, res, next){
     try {
-        if(!req.body || Object.keys(req.body).length === 0){
-            return res.json({ message: "No data received" });
-        }
-
         const id = parseInt(req.params.id);
         
         if(isNaN(id)) return res.json({ message: "Invalid Id" });
