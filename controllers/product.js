@@ -55,6 +55,7 @@ async function editProduct(req, res, next){
                     unit: true,
                     priceUnit: true,
                     initialStock: true,
+                    currentStock: true,
                     alertTreshold: true,
                     categoryId: true
                 }
