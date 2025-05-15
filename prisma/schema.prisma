@@ -92,6 +92,7 @@ model Product {
   unit          String // Unité de mesure (ex: kg, litre...)
   priceUnit     Int? // Prix de vente unitaire conseillé
   initialStock  Float    @default(0) // Stock de départ lors de la création
+  currentStock  Float    @default(0) // Stock actuel
   alertTreshold Float    @default(0) // Seuil d'alerte pour les stocks faibles
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt()
