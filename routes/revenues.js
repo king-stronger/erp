@@ -11,7 +11,7 @@ import {
     createRevenueSchema,
     updateRevenueSchema
 } from "../validations/revenue.js";
-import { validate } from "../utils/validation.js";
+import { validate } from "../middlewares/validation.js";
 
 const revenueRouter = Router();
 
