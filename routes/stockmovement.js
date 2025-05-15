@@ -11,7 +11,8 @@ import {
     storeStockMovement,
     updateStockMovement
 } from "../controllers/stockmovement.js";
-import { validate } from "../utils/validation.js";
+import { validate } from "../middlewares/validation.js";
+
 
 
 const stockmovementRouter = Router();

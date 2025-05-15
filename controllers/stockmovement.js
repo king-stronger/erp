@@ -73,10 +73,6 @@ async function editStockMovement(req, res, next){
 
 async function storeStockMovement(req, res, next){
     try {
-        if (!req.body || Object.keys(req.body).length === 0) {
-            return res.json({ message: "No data was received" });
-        }
-
         const { productId, quantity, movementType } = req.validatedBody;
 
         let newStockMovement;
@@ -116,10 +112,6 @@ async function storeStockMovement(req, res, next){
 
 async function updateStockMovement(req, res, next) {
     try {
-        if (!req.body || Object.keys(req.body).length === 0) {
-            return res.json({ message: "No data was received" });
-        }
-
         const id = parseInt(req.params.id);
         if (isNaN(id)) return res.json({ message: "Invalid Id" });
 
