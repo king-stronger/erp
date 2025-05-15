@@ -5,7 +5,7 @@ import revenueRouter from "./revenues.js";
 import expenseRouter from "./expenses.js";
 import productRouter from "./products.js";
 import categoryRouter from "./categories.js";
-import stockmovementRouter from "./stockmovement.js";
+import stockmovementRouter from "./stockmovements.js";
 import { isAuthenticated } from "../middlewares/authentication.js";
 
 const router = Router();
