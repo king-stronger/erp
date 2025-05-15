@@ -11,7 +11,7 @@ import {
     createProductschema,
     updateProductschema
 } from "../validations/product.js";
-import { validate } from "../utils/validation.js";
+import { validate } from "../middlewares/validation.js";
 
 const productRouter = Router();
 

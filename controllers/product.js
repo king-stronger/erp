@@ -79,10 +79,6 @@ async function editProduct(req, res, next){
 
 async function storeProduct(req, res, next){
     try {
-        if(!req.body || Object.keys(req.body).length === 0){
-            return res.json({ message: "No data was received" });
-        }
-
         const { categoryId } = req.validatedBody;
 
         const existingCategory = await prisma.category.findUnique({
@@ -101,10 +97,6 @@ async function storeProduct(req, res, next){
 
 async function updateProduct(req, res, next){
     try {
-        if(!req.body || Object.keys(req.body).length === 0){
-            return res.json({ message: "No data was received" });
-        }
-
         const id = parseInt(req.params.id);
 
         if(isNaN(id)) return res.json({ message: "invalid Id" });
